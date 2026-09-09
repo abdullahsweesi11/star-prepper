@@ -1,0 +1,6 @@
+- Use a Django user-facing orchestrator with Go-based microservices (e.g. recording, saving, analysing) that communicate internally via gRPC
+- Think carefully about the choice of DB
+- Authentication options: email-password, passkey, third-party auth
+- Software testing is necessary: unit (high-priority), integration (mid-priority), end-to-end (low-priority)
+- Use Docker containerisation, VPS, and Cloudflare tunnels for deployment, with a humble CI/CD pipeline on-commit
+- Rely on local storage to start off with, but make it extensible to cloud storage (perhaps with Stripe-based subscription)
