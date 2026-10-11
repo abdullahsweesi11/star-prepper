@@ -55,7 +55,9 @@ func main() {
 
 	authGroup := router.Group("/auth")
 	authGroup.POST("/register", middleware.AuthMiddleware(), controllers.Register)
-	// authGroup.POST("/login", middleware.AuthMiddleware(), controllers.Login)
+	authGroup.POST("/login", middleware.AuthMiddleware(), controllers.Login)
+
+	router.GET("/me", middleware.ProtectedMiddleware(), controllers.GetCurrentUser)
 
 	router.Run("localhost:8080")
 }

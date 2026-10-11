@@ -8,10 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetCurrentUser(c *gin.Context) {
+	user := c.MustGet("currentUser").(models.User)
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": map[string]string{"email": user.Email},
+	})
+}
+
 func GetUsers(c *gin.Context) {
 	db, ok := c.MustGet("db").(*sql.DB)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not access DB"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not access DB (2)"})
 	}
 
 	rows, err := db.QueryContext(c.Request.Context(), "SELECT email FROM users")
