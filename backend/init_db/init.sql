@@ -48,8 +48,9 @@ CREATE TABLE narratives_competencies (
     PRIMARY KEY(narrative_id, competency_id)
 );
 
+
 CREATE OR REPLACE FUNCTION mark_updated()
-RETURNS trigger AS $mark_updated$
+RETURNS trigger AS $$
     BEGIN
         NEW.updated_at := CURRENT_TIMESTAMP;
         RETURN NEW;
@@ -67,3 +68,25 @@ CREATE TRIGGER trg_mark_updated_narratives BEFORE UPDATE ON narratives
 CREATE TRIGGER trg_mark_updated_competencies BEFORE UPDATE ON competencies
     FOR EACH ROW
     EXECUTE FUNCTION mark_updated();
+
+
+CREATE OR REPLACE FUNCTION set_default_role()
+RETURNS TRIGGER AS $$
+    BEGIN
+        IF NEW.company_id IS NULL THEN
+            SELECT id INTO NEW.role_id 
+            FROM companies 
+            WHERE name = 'user' 
+            LIMIT 1;
+            
+            IF NEW.role_id IS NULL THEN
+                RAISE EXCEPTION 'The default role "user" does not exist.';
+            END IF;
+        END IF;
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tgr_set_default_role BEFORE INSERT ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION set_default_role();
