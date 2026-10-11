@@ -51,6 +51,11 @@ func main() {
 	router := gin.Default()
 	router.Use(middleware.DatabaseMiddleware(db))
 
-	router.GET("/user", controllers.GetUsers)
+	// router.GET("/user", controllers.GetUsers)
+
+	authGroup := router.Group("/auth")
+	authGroup.POST("/register", middleware.AuthMiddleware(), controllers.Register)
+	// authGroup.POST("/login", middleware.AuthMiddleware(), controllers.Login)
+
 	router.Run("localhost:8080")
 }
