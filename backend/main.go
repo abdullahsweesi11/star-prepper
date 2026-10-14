@@ -46,6 +46,10 @@ func init() {
 }
 
 func main() {
+	if os.Getenv("APP_ENV") == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	defer db.Close()
 
 	router := gin.Default()

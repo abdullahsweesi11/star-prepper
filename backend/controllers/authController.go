@@ -3,16 +3,15 @@ package controllers
 import (
 	"database/sql"
 	"encoding/hex"
-	"fmt"
 	"net/http"
 	"os"
 	"star-prepper/models"
+	"star-prepper/utils"
 	"time"
 
 	"crypto/sha256"
 
 	"github.com/gin-gonic/gin"
-	jwt5 "github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -56,14 +55,17 @@ func Register(c *gin.Context) {
 	}
 
 	// insert into DB
-	query = "INSERT INTO users (email, hashed_password) VALUES ($1, $2)"
-	_, err = db.ExecContext(c.Request.Context(), query, credentials.Email, hashedPassword)
+	var userId string
+	query = "INSERT INTO users (email, hashed_password) VALUES ($1, $2) RETURNING user_id"
+	err = db.QueryRowContext(c.Request.Context(), query, credentials.Email, hashedPassword).Scan(&userId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not register user"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "created user"})
+	// user authenticated
+
+	setAuthCookieAndResponse(c, http.StatusCreated, userId, credentials.Email, "registration (and login) successful")
 }
 
 func Login(c *gin.Context) {
@@ -99,34 +101,13 @@ func Login(c *gin.Context) {
 	preHash := hex.EncodeToString(checksum[:])
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(preHash)); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		return
 	}
 
-	expTime := time.Now().Add(time.Hour * 24).Unix()
+	// user has been authenticated
 
-	generateToken := jwt5.NewWithClaims(jwt5.SigningMethodHS256, jwt5.MapClaims{
-		"id":  user.UserId.String(),
-		"exp": expTime,
-	})
-
-	token, err := generateToken.SignedString([]byte(os.Getenv("JWT_SECRET")))
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not sign JWT token"})
-		return
-	}
-
-	c.SetCookie(
-		"access_token", token,
-		int((time.Hour * 24).Seconds()),
-		"/",
-		"localhost", // TODO: change to domain name in prod
-		false,       // TODO: change to true in prod
-		true,
-	)
-
-	c.JSON(http.StatusOK, gin.H{"message": "login successful"})
+	setAuthCookieAndResponse(c, http.StatusOK, user.UserId.String(), user.Email, "login sucessful")
 }
 
 func Logout(c *gin.Context) {
@@ -137,4 +118,31 @@ func Logout(c *gin.Context) {
 	)
 
 	c.JSON(http.StatusOK, gin.H{"message": "logout successful"})
+}
+
+func setAuthCookieAndResponse(c *gin.Context, statusCode int, userId string, email string, message string) {
+	durationHours := time.Hour * 24
+
+	token, err := utils.GenerateJWT(userId, time.Now().Add(durationHours).Unix())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not sign JWT token"})
+		return
+	}
+
+	isProd := gin.Mode() == gin.ReleaseMode
+	domain := os.Getenv("COOKIE_DOMAIN")
+
+	c.SetCookie(
+		"access_token", token,
+		int(durationHours.Seconds()),
+		"/",
+		domain,
+		isProd,
+		true,
+	)
+
+	c.JSON(statusCode, gin.H{
+		"message": message,
+		"user":    map[string]string{"userId": userId, "email": email},
+	})
 }
