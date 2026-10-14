@@ -103,9 +103,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	expTime := time.Now().Add(time.Hour * 24).Unix()
+
 	generateToken := jwt5.NewWithClaims(jwt5.SigningMethodHS256, jwt5.MapClaims{
 		"id":  user.UserId.String(),
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"exp": expTime,
 	})
 
 	token, err := generateToken.SignedString([]byte(os.Getenv("JWT_SECRET")))
@@ -115,5 +117,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.SetCookie(
+		"access_token", token,
+		int((time.Hour * 24).Seconds()),
+		"/",
+		"localhost", // TODO: change to domain name in prod
+		false,       // TODO: change to true in prod
+		true,
+	)
+
+	c.JSON(http.StatusOK, gin.H{"message": "authentication successful"})
 }
