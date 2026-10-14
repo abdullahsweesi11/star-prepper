@@ -126,5 +126,15 @@ func Login(c *gin.Context) {
 		true,
 	)
 
-	c.JSON(http.StatusOK, gin.H{"message": "authentication successful"})
+	c.JSON(http.StatusOK, gin.H{"message": "login successful"})
+}
+
+func Logout(c *gin.Context) {
+	c.SetCookie("access_token", "", -1, "/",
+		"localhost", // TODO: change to domain name in prod
+		false,       // TODO: change to true in prod
+		true,
+	)
+
+	c.JSON(http.StatusOK, gin.H{"message": "logout successful"})
 }
