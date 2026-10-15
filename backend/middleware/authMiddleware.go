@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"star-prepper/models"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	jwt5 "github.com/golang-jwt/jwt/v5"
@@ -30,22 +29,14 @@ func AuthMiddleware() gin.HandlerFunc {
 
 func ProtectedMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-
-		if authHeader == "" {
+		tokenString, err := c.Cookie("access_token")
+		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user must be authorized"})
 			c.Abort()
 			return
 		}
 
-		authToken := strings.Split(authHeader, " ")
-		if len(authToken) != 2 || authToken[0] != "Bearer" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token format"})
-			c.Abort()
-			return
-		}
-
-		token, err := jwt5.Parse(authToken[1], func(token *jwt5.Token) (any, error) {
+		token, err := jwt5.Parse(tokenString, func(token *jwt5.Token) (any, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		}, jwt5.WithValidMethods([]string{"HS256"}))
 

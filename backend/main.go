@@ -54,6 +54,7 @@ func main() {
 
 	router := gin.Default()
 	router.Use(middleware.DatabaseMiddleware(db))
+	router.Use(middleware.CorsConfig)
 
 	// router.GET("/user", controllers.GetUsers)
 

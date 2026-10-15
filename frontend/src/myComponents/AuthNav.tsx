@@ -1,5 +1,7 @@
 import { useAuth } from "@/context/AuthContext"
-import { Button } from "@/components/ui/button"
+import LoginDropdown from "./LoginDropdown"
+import RegisterDropdown from "./RegisterDropdown"
+import UserMenu from "./UserMenu"
 
 export default function AuthNav() {
     const {user} = useAuth()
@@ -9,11 +11,11 @@ export default function AuthNav() {
             <h5 className="size-max">
             {
                 user ?
-                    user.email
+                    <UserMenu />
                 :
                     <>
-                    <Button variant="link">Login</Button> |
-                    <Button variant="link">Register</Button>
+                    <LoginDropdown /> |
+                    <RegisterDropdown />
                     </>
             }
             </h5>

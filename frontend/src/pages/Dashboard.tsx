@@ -1,9 +1,7 @@
 import {
     Card,
     CardAction,
-    CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
@@ -22,9 +20,9 @@ export default function Dashboard() {
 
             <Input className="mb-5" placeholder="Search"/>
 
-            <h4 className="text-gray-500 italic my-10 place-self-center">No stories available</h4>
+            {/* <h4 className="text-gray-500 italic my-10 place-self-center">No stories available</h4> */}
 
-            {/* <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
                 <Card className="w-full max-w-full">
                     <CardHeader>
                         <CardTitle>IntervU</CardTitle>
@@ -52,7 +50,7 @@ export default function Dashboard() {
                         </CardAction>
                     </CardHeader>
                 </Card>
-            </div> */}
+            </div>
         </div>
     </div>
 }

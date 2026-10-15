@@ -89,7 +89,7 @@ func Login(c *gin.Context) {
 	query := "SELECT user_id, email, hashed_password FROM users WHERE email = $1"
 	err := db.QueryRowContext(c.Request.Context(), query, credentials.Email).Scan(&user.UserId, &user.Email, &user.HashedPassword)
 	if err == sql.ErrNoRows {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		return
 	}
 	if err != nil {
