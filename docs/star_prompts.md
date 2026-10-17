@@ -1,0 +1,11 @@
+The prompts for each STAR component:
+- Situation
+    - "What's the surrounding context? (*The context, setting, and timing*)"
+- Task
+    - "What was the specific objective? (*This is the challenge, responsibility or goal*)"
+- Action
+    - "What specific steps did you take to achieve the objective?"
+- Result
+    - "What was the final outcome? (*Include numbers, metrics, or feedback if possible*)"
+- Reflection (optional)
+    - "Looking back, what did you learn, and what would you do differently next time?"
