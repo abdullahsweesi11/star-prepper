@@ -1,0 +1,42 @@
+Basic questions that everyone will see:
+- Describe a time when you worked effectively in a team to achieve a common goal.
+    - \#teamwork
+    - \#communication
+    - \#collaboration
+- Describe a time when you took on a leadership role.
+    - \#leadership
+    - \#motivation
+    - \#inspiration
+    - \#mentorship
+- Describe a time when you had to handle multiple competing priorities under tight deadlines.
+    - \#time-management
+    - \#prioritisation
+    - \#stress-management
+- Describe a time when you noticed a problem and took the initiative to solve it.
+    - \#initiative
+    - \#proactivity
+    - \#attention-to-detail
+- Describe a complex/challenging problem you solved.
+    - \#problem-solving
+    - \#critical-thinking
+    - \#analytical-skills
+- Describe a time when you received constructive feedback. How did you respond?
+    - \#feedback-receptivity
+    - \#ownership
+    - \#growth-mindset
+- Describe a time when you had a disagreement with a colleague or boss.
+    - \#conflict-resolution
+    - \#empathy
+    - \#negotiation
+- Describe a time when you made a mistake. How did you handle it, and what did you learn?
+    - \#accountability
+    - \#ownership
+    - \#reflection
+- Describe a time when you failed. What did you learn from that situation?
+    - \#resilience
+    - \#ownership
+    - \#learning-agility
+- Describe a time when you things didn't go to plan. How did you adapt?
+    - \#change-management
+    - \#flexibility
+    - \#adaptability
